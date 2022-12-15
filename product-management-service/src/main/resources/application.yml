@@ -1,0 +1,28 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: product-management-service
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/product-management-service-db
+    password: Chiran1994#
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: 'true'
+  config:
+    import: configserver:http://localhost:9296
+logging:
+  file:
+    name: E:/logs/product-management-service.log
+
+#eureka:
+#  instance:
+#    prefer-ip-address: true
+#  client:
+#    fetch-registry: true
+#    register-with-eureka: true
+#    service-url:
+#      defaultZone: ${EUREKA_SERVER_ADDRESS:http://localhost:8761/eureka/}

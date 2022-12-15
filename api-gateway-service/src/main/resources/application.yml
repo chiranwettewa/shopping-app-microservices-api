@@ -1,0 +1,56 @@
+server:
+  port: 9090
+
+spring:
+  application:
+    name: api-gateway-service
+  config:
+    import: configserver:http://localhost:9296
+  cloud:
+    gateway:
+      routes:
+      - id: product-management-service
+        uri: lb://product-management-service
+        predicates:
+          - Path=/product/**
+        filters:
+          - name: CircuitBreaker
+            args:
+              name: product-management-service
+              fallbackuri: forward:/productServiceFallBack
+          - name: RequestRateLimiter
+            args:
+              redis-rate-limiter.replenishRate: 1
+              redis-rate-limiter.burstCapacity: 1
+
+      - id: order-management-service
+        uri: lb://order-management-service
+        predicates:
+          - Path=/order/**
+        filters:
+          - name: CircuitBreaker
+            args:
+              name: order-management-service
+              fallbackuri: forward:/orderServiceFallBack
+          - name: RequestRateLimiter
+            args:
+              redis-rate-limiter.replenishRate: 1
+              redis-rate-limiter.burstCapacity: 1
+
+      - id: payment-management-service
+        uri: lb://payment-management-service
+        predicates:
+          - Path=/payment/**
+        filters:
+          - name: CircuitBreaker
+            args:
+              name: payment-management-service
+              fallbackuri: forward:/paymentServiceFallBack
+          - name: RequestRateLimiter
+            args:
+              redis-rate-limiter.replenishRate: 1
+              redis-rate-limiter.burstCapacity: 1
+
+logging:
+  file:
+    name: E:/logs/order-management-service.log
