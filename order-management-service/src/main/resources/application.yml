@@ -1,6 +1,26 @@
 server:
   port: 8082
 spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8181/realms/shopping-app-microservices-realm
+      client:
+        registration:
+          keycloak:
+            client-id: shopping-app-client
+            client-secret: yAXXyo7uPcGNy1kthyQhH5kV3d4b9Ect
+            clientName: Keycloak
+            authorization-grant-type: client_credentials
+            scope:
+              - openid
+              - profile
+              - email
+        provider:
+          keycloak:
+            issuer-uri : http://localhost:8181/realms/shopping-app-microservices-realm
+
   application:
     name: order-management-service
   datasource:
