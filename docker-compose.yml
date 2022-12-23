@@ -1,0 +1,56 @@
+version: '3'
+services:
+  discovery-management-service:
+    image: 'chiranwettewa/discovery-management-service:latest'
+    container_name: discovery-management-service
+    ports:
+      - '8761:8761'
+  configuration-management-service:
+    image: 'chiranwettewa/configuration-management-service:latest'
+    container_name: configuration-management-service
+    ports:
+      - '9296:9296'
+    environment:
+      - EUREKA_SERVER_ADDRESS=http://discovery-management-service:8761/eureka/
+    depends_on:
+      - discovery-management-service
+  api-gateway-service:
+    image: 'chiranwettewa/api-gateway-service:latest'
+    container_name: api-gateway-service
+    ports:
+      - '9090:9090'
+    environment:
+      - EUREKA_SERVER_ADDRESS=http://discovery-management-service:8761/eureka/
+      - HOST_SERVER_URL=host.docker.internal
+    depends_on:
+      - configuration-management-service
+  order-management-service:
+    image: 'chiranwettewa/order-management-service:latest'
+    container_name: order-management-service
+    ports:
+      - '8082:8082'
+    environment:
+      - EUREKA_SERVER_ADDRESS=http://discovery-management-service:8761/eureka/
+      - HOST_SERVER_URL=host.docker.internal
+    depends_on:
+      - configuration-management-service
+  payment-management-service:
+    image: 'chiranwettewa/payment-management-service:latest'
+    container_name: payment-management-service
+    ports:
+      - '8081:8081'
+    environment:
+      - EUREKA_SERVER_ADDRESS=http://discovery-management-service:8761/eureka/
+      - HOST_SERVER_URL=host.docker.internal
+    depends_on:
+      - configuration-management-service
+  product-management-service:
+    image: 'chiranwettewa/product-management-service:latest'
+    container_name: product-management-service
+    ports:
+      - '8080:8080'
+    environment:
+      - EUREKA_SERVER_ADDRESS=http://discovery-management-service:8761/eureka/
+      - HOST_SERVER_URL=host.docker.internal
+    depends_on:
+      - configuration-management-service

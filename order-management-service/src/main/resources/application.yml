@@ -1,19 +1,21 @@
 server:
   port: 8082
 spring:
+  zipkin:
+    baseUrl: http://${HOST_SERVER_URL:localhost}:9411/zipkin/
   application:
     name: order-management-service
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
-    url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/order-management-service-db
+    url: jdbc:mysql://${HOST_SERVER_URL:localhost}:3306/order-management-service-db
     password: Chiran1994#
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: 'true'
   config:
-    import: configserver:http://localhost:9296
+    import: configserver:http://${HOST_SERVER_URL:localhost}:9296
 
 logging:
   file:
