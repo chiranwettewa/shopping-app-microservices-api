@@ -12,6 +12,11 @@ services:
       - '9296:9296'
     environment:
       - EUREKA_SERVER_ADDRESS=http://discovery-management-service:8761/eureka/
+    healthcheck:
+      test: ["CMD","curl","-f","http://configuration-management-service:9296/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     depends_on:
       - discovery-management-service
   api-gateway-service:
@@ -23,7 +28,8 @@ services:
       - EUREKA_SERVER_ADDRESS=http://discovery-management-service:8761/eureka/
       - HOST_SERVER_URL=host.docker.internal
     depends_on:
-      - configuration-management-service
+      configuration-management-service:
+        condition: service_healthy
   order-management-service:
     image: 'chiranwettewa/order-management-service:latest'
     container_name: order-management-service
@@ -33,7 +39,8 @@ services:
       - EUREKA_SERVER_ADDRESS=http://discovery-management-service:8761/eureka/
       - HOST_SERVER_URL=host.docker.internal
     depends_on:
-      - configuration-management-service
+      configuration-management-service:
+        condition: service_healthy
   payment-management-service:
     image: 'chiranwettewa/payment-management-service:latest'
     container_name: payment-management-service
@@ -43,7 +50,8 @@ services:
       - EUREKA_SERVER_ADDRESS=http://discovery-management-service:8761/eureka/
       - HOST_SERVER_URL=host.docker.internal
     depends_on:
-      - configuration-management-service
+      configuration-management-service:
+        condition: service_healthy
   product-management-service:
     image: 'chiranwettewa/product-management-service:latest'
     container_name: product-management-service
@@ -53,4 +61,5 @@ services:
       - EUREKA_SERVER_ADDRESS=http://discovery-management-service:8761/eureka/
       - HOST_SERVER_URL=host.docker.internal
     depends_on:
-      - configuration-management-service
+      configuration-management-service:
+        condition: service_healthy
