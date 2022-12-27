@@ -1,7 +1,7 @@
 version: '3'
 services:
   discovery-management-service:
-    image: 'chiranwettewa/discovery-management-service:latest'
+    image: 'registry.hub.docker.com/chiranwettewa/discovery-management-service:latest'
     container_name: discovery-management-service
     ports:
       - '8761:8761'
