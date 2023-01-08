@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payament-management-service
+spec:
+  selector:
+    matchLabels:
+      app: payament-management-service
+  template:
+    metadata:
+      labels:
+        app: payament-management-service
+    spec:
+      containers:
+      - name: payament-management-service
+        image: chiranwettewa/payment-management-service
+        ports:
+        - containerPort: 8081
+        env:
+          - name: EUREKA_SERVER_ADDRESS
+            valueFrom:
+              configMapKeyRef:
+                key: eureka_service_address
+                name: eureka-cm
+          - name: CONFIG_SERVER_URL
+            valueFrom:
+              configMapKeyRef:
+                key: config_url
+                name: config-cm
+          - name: DB_HOST
+            valueFrom:
+              configMapKeyRef:
+                key: hostname
+                name: mysql-cm
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: payament-management-service-svc
+spec:
+  selector:
+    app: payament-management-service
+  ports:
+  - port: 80
+    targetPort: 8081
+

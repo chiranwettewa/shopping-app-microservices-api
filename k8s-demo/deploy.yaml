@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: discovery-management-service
+spec:
+  selector:
+    matchLabels:
+      app: discovery-management-service
+  template:
+    metadata:
+      labels:
+        app: discovery-management-service
+    spec:
+      containers:
+        - name: discovery-management-service
+          image: chiranwettewa/discovery-management-service:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8761

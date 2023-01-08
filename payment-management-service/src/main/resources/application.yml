@@ -1,8 +1,6 @@
 server:
   port: 8081
 spring:
-  zipkin:
-    baseUrl: http://${HOST_SERVER_URL:localhost}:9411/zipkin/
   application:
     name: payment-management-service
   datasource:
@@ -15,7 +13,7 @@ spring:
       ddl-auto: update
     show-sql: 'true'
   config:
-    import: configserver:http://${HOST_SERVER_URL:localhost}:9296
+    import: configserver:${HOST_SERVER_URL:http://localhost:9296}
 logging:
   file:
     name: E:/logs/payment-management-service.log

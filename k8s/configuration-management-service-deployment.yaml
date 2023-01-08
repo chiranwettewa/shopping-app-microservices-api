@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: configuration-management-service
+spec:
+  selector:
+    matchLabels:
+      app: configuration-management-service
+  template:
+    metadata:
+      labels:
+        app: configuration-management-service
+    spec:
+      containers:
+      - name: configuration-management-service
+        image: chiranwettewa/configuration-management-service
+        ports:
+        - containerPort: 9296
+        env:
+          - name: EUREKA_SERVER_ADDRESS
+            valueFrom:
+              configMapKeyRef:
+                key: eureka_service_address
+                name: eureka-cm
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: configuration-management-service-svc
+spec:
+  selector:
+    app: configuration-management-service
+  ports:
+  - port: 80
+    targetPort: 9296

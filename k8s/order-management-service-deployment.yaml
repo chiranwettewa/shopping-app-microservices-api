@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-managemet-service
+spec:
+  selector:
+    matchLabels:
+      app: order-managemet-service
+  template:
+    metadata:
+      labels:
+        app: order-managemet-service
+    spec:
+      containers:
+      - name: order-managemet-service
+        image: chiranwettewa/order-management-service
+        ports:
+        - containerPort: 8082
+        env:
+          - name: EUREKA_SERVER_ADDRESS
+            valueFrom:
+              configMapKeyRef:
+                key: eureka_service_address
+                name: eureka-cm
+          - name: CONFIG_SERVER_URL
+            valueFrom:
+              configMapKeyRef:
+                key: config_url
+                name: config-cm
+          - name: DB_HOST
+            valueFrom:
+              configMapKeyRef:
+                key: hostname
+                name: mysql-cm
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: order-managemet-service-svc
+spec:
+  selector:
+    app: order-managemet-service
+  ports:
+  - port: 80
+    targetPort: 8082
+
